@@ -2,6 +2,10 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../context/AuthContext";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
+import Dashboard from "../pages/Dashboard";
+import ProtectedRoute from "./ProtectedRoute";
+import SearchFlights from "../pages/SearchFlights";
+import Vulnerabilities from "../pages/Vulnerabilities";
 
 const AppRoutes = () => {
   return (
@@ -10,9 +14,30 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<p>Dashboard</p>} />
-          <Route path="/search-flights" element={<p>Busqueda de vuelos</p>} />
-          <Route path="/vulnerabilities" element={<p>Vulnerabilidades</p>} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "user"]}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/search-flights"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "user"]}>
+                <SearchFlights />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/vulnerabilities"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <Vulnerabilities />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>

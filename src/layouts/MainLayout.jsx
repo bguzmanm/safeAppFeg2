@@ -1,28 +1,51 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 const MainLayout = ({ children }) => {
+  const { user, logout } = useAuth();
+
   return (
-    <div>
+    <div className="container">
       <header>
         <nav>
           <ul>
             <li>
               <Link to="/">Inicio</Link>
             </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
-            <li>
-              <Link to="/searh-flights">Buscar Vuelos</Link>
-            </li>
-            <li>
-              <Link to="/vulnerabilities">Vulnerabilidades</Link>
-            </li>
-            <li>
-              <button>Cerrar Sesión</button>
-            </li>
+            {!user && (
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+            )}
+            {user?.role === "admin" && (
+              <li>
+                <Link to="/dashboard">Dashboard</Link>
+              </li>
+            )}
+            {user && (
+              <li>
+                <Link to="/search-flights">Buscar Vuelos</Link>
+              </li>
+            )}
+            {user?.role === "admin" && (
+              <li>
+                <Link to="/vulnerabilities">Vulnerabilidades</Link>
+              </li>
+            )}
+            {user && (
+              <li>
+                <button
+                  onClick={logout}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cerrar Sesión
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
       </header>
